@@ -11,5 +11,6 @@ end
 
 class Comment < ActiveRecord::Base
 	belongs_to :post
+	validates :name, :body, presence: true
 	# belongs_to :user
 end

@@ -47,18 +47,24 @@ class SinatraBlogApp < Sinatra::Base
     end
 
     namespace '/:id' do
-      get do 
+      before do 
         @post = Post.find params[:id]
+      end
+
+      get do 
+        # @post = Post.find params[:id]
+        @comment = @post.comments.new
         erb :show
+
       end
 
       get '/edit' do
-        @post = Post.find params[:id]
+        # @post = Post.find params[:id]
         erb :edit
       end
 
       put do
-        @post = Post.find params[:id]
+        # @post = Post.find params[:id]
         if @post.update_attributes(params[:post])
           puts params
           redirect "/posts"
@@ -68,11 +74,24 @@ class SinatraBlogApp < Sinatra::Base
       end
 
       delete do
-        post = Post.find params[:id] 
-        if post.destroy
+        # @post = Post.find params[:id] 
+        if @post.destroy
           redirect '/'
         else
           erb :edit
+        end
+      end
+
+      namespace '/comments' do
+        post do
+          @comment = @post.comments.create(params[:comment])
+          erb :show
+        end
+
+        delete do 
+          @comment = @post.comments.find(params[:id])
+          @comment.destroy
+          redirect '/'
         end
       end
     end

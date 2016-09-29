@@ -8,4 +8,29 @@
   <input type="submit" value="Delete Post" />
 </form>
 <br />
+
+<div id="comments">
+
+  <h3><%=h @post.comments.count %> Comments </h3>
+  <div class="comment_content">
+  	<% @post.comments.each do |comment| %>
+	    <p class="comment_name"><strong><%= comment.name %></strong></p>
+	    <p class="comment_body"><%= comment.body %></p>
+    <% end %>
+  </div>
+
+  <h3>Add a comment:</h3>
+  <form action="/posts/<%=h @post.id %>/comments" method="post">
+    <label for="comment_name">Name:</label><br />
+    <input id="comment_name" name="comment[name]" type="text" value="<%= @comment.name %>" />
+    <br />
+    <br />
+    <label for="comment_body">Text:</label><br />
+    <textarea id="comment_name" name="comment[body]" rows="5"><%= @comment.body %></textarea> 
+    <br />
+    <input type="submit" value="Submit" />
+   </form> 
+	</div>
+</div>	
+
 <a href="/">Home</a>
