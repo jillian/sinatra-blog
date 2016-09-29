@@ -9,7 +9,7 @@ class Post < ActiveRecord::Base
 	validates :title, :body, presence: true
 end
 
-# class Comment < ActiveRecord::Base
-# 	belongs_to :post
-# 	belongs_to :user
-# end
+class Comment < ActiveRecord::Base
+	belongs_to :post
+	# belongs_to :user
+end

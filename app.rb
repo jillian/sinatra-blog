@@ -2,12 +2,14 @@ require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
+require 'sinatra/namespace'
 require './models'
 require './lib/analytics'
 
 class SinatraBlogApp < Sinatra::Base 
   use Rack::MethodOverride
   register Sinatra::Flash
+  register Sinatra::Namespace
 
   enable :sessions
 
@@ -24,62 +26,67 @@ class SinatraBlogApp < Sinatra::Base
     redirect '/posts'
   end
 
-  get '/posts' do
-    @posts = Post.order("created_at DESC")
-    erb :index
-  end
-
-  get '/posts/new' do
-    @post = Post.new
-    erb :new
-  end
-
-  get '/posts/:id' do 
-    @post = Post.find params[:id]
-    erb :show
-  end
-
-  post '/posts' do 
-  	post = Post.create params[:post]
-    if post.save
-      redirect '/'
-    else
-      redirect '/new' 
+  namespace '/posts' do 
+    get '' do
+      @posts = Post.order("created_at DESC")
+      erb :index
     end
-  end
 
-  get '/posts/:id/edit' do
-    @post = Post.find params[:id]
-    erb :edit
-  end
+    get '/new' do
+      @post = Post.new
+      erb :new
+    end
 
-  put '/posts/:id' do
-    @post = Post.find params[:id]
-    if @post.update_attributes(params[:post])
-      puts params
-      redirect "/posts"
-    else
+    get '/:id' do 
+      @post = Post.find params[:id]
+      erb :show
+    end
+
+    post '/' do 
+    	post = Post.create params[:post]
+      if post.save
+        redirect '/'
+      else
+        redirect '/new' 
+      end
+    end
+
+    get '/:id/edit' do
+      @post = Post.find params[:id]
       erb :edit
     end
-  end
 
-  delete '/posts/:id' do
-    post = Post.find params[:id] 
-    if post.destroy
-      redirect '/'
-    else
-      erb :edit
+    put '/:id' do
+      @post = Post.find params[:id]
+      if @post.update_attributes(params[:post])
+        puts params
+        redirect "/posts"
+      else
+        erb :edit
+      end
     end
+
+    delete '/:id' do
+      post = Post.find params[:id] 
+      if post.destroy
+        redirect '/'
+      else
+        erb :edit
+      end
+    end
+
   end
 
-  get '/analytics/posts' do 
-    content_type :json
-    Analytics.new.post_data.to_json 
-  end
+  namespace '/analytics' do
+    get '/posts' do 
+      content_type :json
+      Analytics.new.post_data.to_json 
+    end
 
-  get '/analytics/blog' do
-    content_type :json
-    Analytics.new.blog_data.to_json
+    get '/blog' do
+      content_type :json
+      Analytics.new.blog_data.to_json
+    end
   end
     
 end

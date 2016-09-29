@@ -5,6 +5,7 @@ gem 'sinatra', '>= 1.4'
 gem "sinatra-activerecord"
 gem 'sinatra-flash'
 gem 'sinatra-redirect-with-flash'
+gem 'sinatra-contrib'
 gem 'rake'
 gem 'pg'
 
