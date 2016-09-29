@@ -46,7 +46,7 @@ class Analytics
 
 	 	def most_common_words(text)
 	 		each_word = text.downcase.scan(/\w+/)
-	 		word_frequency_array = Hash.new(0).tap { |hash| each_word.each { |word| has[word] += 1 } }
+	 		word_frequency_array = Hash.new(0).tap { |hash| each_word.each { |word| hash[word] += 1 } }
 
 	 		max_frequency 		= word_frequency_array.values.max
 	 		most_common_words = word_frequency_array.select { |k, v| v == max_frequency }.keys 
