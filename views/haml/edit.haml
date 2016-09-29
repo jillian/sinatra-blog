@@ -1,0 +1,12 @@
+%h1 Edit Post
+%form{:action => "/posts/#{@post.id}", :method => "post"}
+  %input{:name => "_method", :type => "hidden", :value => "put"}/
+  %label{:for => "title"} Title
+  %br/
+  %input#title{:name => "post[title]", :type => "text", :value => @post.title}/
+  %br/
+  %label{:for => "body"} Body
+  %br/
+  %textarea#body{:name => "post[body]", :rows => "5"}= @post.body
+  %br/
+  %input{:type => "submit", :value => "Edit Post"}/

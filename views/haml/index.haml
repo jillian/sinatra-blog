@@ -1,0 +1,10 @@
+%h1 Blog Blog Blog
+%ul
+  - @posts.each do |post|
+    %li
+      %h2
+        %a{:href => "/posts/#{post.id}"}= post.title
+      %br/
+      %span= format_date(post.created_at)
+      %br/
+%a{:href => "/new"} Create new post
