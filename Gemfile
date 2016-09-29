@@ -6,7 +6,7 @@ gem "sinatra-activerecord"
 gem 'sinatra-flash'
 gem 'sinatra-redirect-with-flash'
 gem 'sqlite3'
-gem 'rake' #above gem runs rake tasks
+gem 'rake'
 gem 'pg'
 
 group :development do
