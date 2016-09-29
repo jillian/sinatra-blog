@@ -5,14 +5,18 @@ class Analytics
 			data = {}
 
 			metadata = {
-				post_id: 							post.id,
+				post_id:              post.id,
 				word_count:           post.body.scan(/\w+/).count,
 				average_word_length:  average_word_length(post.body), 
-				most_common_words:    most_common_words(post.body)
+				most_common_words:    most_common_words(post.body)								
 			}
+	
+			comment_data = {
+				comment_count:  			post.comments.count
+			} 
 
-			data[:metadata] = metadata
-
+			data[:metadata]      = metadata
+			data[:comment_data]  = comment_data
 			post.attributes.update(data)
 		end
 	end
@@ -24,7 +28,7 @@ class Analytics
 			most_recent_entry_id: 		 Post.last.id,
 			blog_average_word_length:  blog_average("average_word_length"),
 			blog_average_word_count: 	 blog_average("word_count"),
-			longest_entry:  					 longest_entry 
+			longest_entry:  					 longest_entry
 		}					
 	end
 
@@ -40,8 +44,8 @@ class Analytics
 	 	end
 
 	 	def longest_entry 
-	 		longest_entry = post_data.group_by { |post| post[:metadata][:word_count] }.max
-	 		{ post_id: longest_entry[1].first["id"], length: longest_entry.first} 
+	 		longest_entry = post_data.max_by { |post| post[:metadata][:word_count] }
+	 		{ post_id: longest_entry["id"], length: longest_entry[:metadata][:word_count] } 
 	 	end
 
 	 	def most_common_words(text)
