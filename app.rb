@@ -34,18 +34,18 @@ class SinatraBlogApp < Sinatra::Base
     erb :new
   end
 
-  get '/posts/:id' do 
-    @post = Post.find params[:id]
-    erb :show
-  end
-
   post '/posts' do 
   	post = Post.create params[:post]
     if post.save
-      redirect '/' #, :notice => "Post created!"
+      redirect '/'
     else
-      redirect '/new' #, :error => "Something went wrong. Try again"
+      redirect '/new' 
     end
+  end
+
+  get '/posts/:id' do 
+    @post = Post.find params[:id]
+    erb :show
   end
 
   get '/posts/:id/edit' do
