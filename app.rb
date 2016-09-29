@@ -27,7 +27,7 @@ class SinatraBlogApp < Sinatra::Base
   end
 
   namespace '/posts' do 
-    get '' do
+    get do
       @posts = Post.order("created_at DESC")
       erb :index
     end
@@ -37,13 +37,8 @@ class SinatraBlogApp < Sinatra::Base
       erb :new
     end
 
-    get '/:id' do 
-      @post = Post.find params[:id]
-      erb :show
-    end
-
-    post '/' do 
-    	post = Post.create params[:post]
+    post do 
+      post = Post.create params[:post]
       if post.save
         redirect '/'
       else
@@ -51,27 +46,34 @@ class SinatraBlogApp < Sinatra::Base
       end
     end
 
-    get '/:id/edit' do
-      @post = Post.find params[:id]
-      erb :edit
-    end
+    namespace '/:id' do
+      get do 
+        @post = Post.find params[:id]
+        erb :show
+      end
 
-    put '/:id' do
-      @post = Post.find params[:id]
-      if @post.update_attributes(params[:post])
-        puts params
-        redirect "/posts"
-      else
+      get '/edit' do
+        @post = Post.find params[:id]
         erb :edit
       end
-    end
 
-    delete '/:id' do
-      post = Post.find params[:id] 
-      if post.destroy
-        redirect '/'
-      else
-        erb :edit
+      put do
+        @post = Post.find params[:id]
+        if @post.update_attributes(params[:post])
+          puts params
+          redirect "/posts"
+        else
+          erb :edit
+        end
+      end
+
+      delete do
+        post = Post.find params[:id] 
+        if post.destroy
+          redirect '/'
+        else
+          erb :edit
+        end
       end
     end
 
